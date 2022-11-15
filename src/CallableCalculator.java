@@ -14,14 +14,14 @@ public class CallableCalculator implements Callable {
 
     public Object call() throws Exception
     {
-        int output = 1;
+        String output = "1";
         FileInputStream f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
         DataInputStream in = new DataInputStream(f);
         BufferedReader r = new BufferedReader(new InputStreamReader(in));
         while ((strLine = r.readLine()) != null) {
             lineNumber++;
             if(lineNumber == whichLine) {
-                output = ONP.calculate(strLine);
+                output = String.valueOf(ONP.calculate(strLine));
                 break;
             }
         }
