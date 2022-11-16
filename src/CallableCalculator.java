@@ -20,13 +20,18 @@ public class CallableCalculator implements Callable {
         BufferedReader r = new BufferedReader(new InputStreamReader(in));
         while ((strLine = r.readLine()) != null) {
             if(lineNumber == whichLine) {
-                output = String.valueOf(ONP.calculate(strLine));
+                strLine = strLine.replaceAll("=","");
+                ONP calculator = new ONP(strLine);
+                output = "";
+                output += calculator.oblicz();
                 break;
             }
             lineNumber++;
         }
         in.close();
-        return output+Thread.currentThread().getName();
+        if(output == "1")
+            return "ERROR no equation to solve";
+        return strLine+" = "+output;
     }
 
 }
