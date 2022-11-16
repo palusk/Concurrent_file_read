@@ -19,14 +19,14 @@ public class CallableCalculator implements Callable {
         DataInputStream in = new DataInputStream(f);
         BufferedReader r = new BufferedReader(new InputStreamReader(in));
         while ((strLine = r.readLine()) != null) {
-            lineNumber++;
             if(lineNumber == whichLine) {
                 output = String.valueOf(ONP.calculate(strLine));
                 break;
             }
+            lineNumber++;
         }
         in.close();
-        return output;
+        return output+Thread.currentThread().getName();
     }
 
 }
