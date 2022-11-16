@@ -27,35 +27,35 @@ public class Main {
 
         //@@@@@@@@@@@@@@@@ UWAGA NIŻEJ WIRUS
 
-//        FileWriter f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
-//        BufferedWriter out = new BufferedWriter(f);
-//        String dane = new String();
-//
-//        boolean[] tab = new boolean[threadsNumber];
-//
-//        for(int i = 0; i<threadsNumber; i++){
-//            tab[i] = false;
-//        }
-//
-//        boolean help = true;
-//
-//        while(help){
-//            try {
-//                for(int i = 0; i<threadsNumber; i++) {
-//                    if(futureTab[i].isDone() && tab[i] == false){
-//                        dane = futureTab[i].get().toString();
-//                        out.write(dane);
-//                        tab[i] = true;
-//                    }
-//                }
-//                help = false;
+        FileWriter f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+        BufferedWriter out = new BufferedWriter(f);
+        String dane = new String();
+
+        boolean[] tab = new boolean[threadsNumber];
+
+        for(int i = 0; i<threadsNumber; i++){
+            tab[i] = false;
+        }
+
+        boolean help = true;
+
+        while(help){
+            try {
+                for(int i = 0; i<threadsNumber; i++) {
+                    if(futureTab[i].isDone() && tab[i] == false){
+                        dane = futureTab[i].get().toString();
+                        out.write(dane);
+                        tab[i] = true;
+                    }
+                }
+                help = false;
         for(boolean x : tab){
-//                    if(x == false) help = true;
-//                }
-//            }catch (Exception e){
-//                System.out.println("Jest zle");
-//            }
-//        }
+                    if(x == false) help = true;
+                }
+            }catch (Exception e){
+                System.out.println("Jest zle");
+            }
+        }
 
         }
     }
