@@ -7,17 +7,22 @@ import java.util.concurrent.*;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        ExecutorService es2 = Executors.newFixedThreadPool(2);
-        MyFutureTask test = new MyFutureTask (new CallableCalculator());
+        System.out.println("How many threads do you want to start?");
+        Scanner sc = new Scanner(System.in);
+        int threadsNumber = sc.nextInt();
+        ExecutorService executor = null;
+        MyFutureTask[] taskTab = new MyFutureTask[threadsNumber];
+        for(int i = 0; i<threadsNumber; i++){
+            executor = Executors.newFixedThreadPool(threadsNumber);
+            taskTab[i] = new MyFutureTask (new CallableCalculator());
+        }
 
-        es2.submit(test);
-        es2.submit(test);
-        es2.shutdown();
+        for(int i = 0; i<threadsNumber; i++){
+            executor.submit(taskTab[i]);
+        }
 
-
-//        System.out.println("How many threads do you want to start?");
-//        Scanner sc = new Scanner(System.in);
-//        int threadsNumber = sc.nextInt();
+        executor.shutdown();
+//
 //
 //        Callable[] callableTab = new CallableCalculator[threadsNumber];
 //        FutureTask[] futureTab = new FutureTask[threadsNumber];

@@ -4,22 +4,23 @@ import java.util.concurrent.FutureTask;
 
 public class CallableCalculator implements Callable {
 
-    String strLine = new String();
+
 
 
    static FileInputStream f;
 
     static {
         try {
-            f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read2\\src\\file.txt");
+            f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read3\\src\\file.txt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
-
     static DataInputStream in = new DataInputStream(f);
-   static BufferedReader r = new BufferedReader(new InputStreamReader(in));
+    static BufferedReader r = new BufferedReader(new InputStreamReader(in));
+
     public Object call() throws Exception {
+        String strLine = new String();
         String allResults = new String();
         String output = new String();
         while ((strLine = r.readLine()) != null) {
@@ -29,6 +30,7 @@ public class CallableCalculator implements Callable {
                 output = "";
                 output += calculator.oblicz();
                 allResults += strLine+" = "+output+System.lineSeparator();
+            System.out.println(Thread.currentThread().getName() + "  -  "+ strLine);
         }
         in.close();
         return allResults;
