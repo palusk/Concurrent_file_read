@@ -5,33 +5,33 @@ import java.util.concurrent.FutureTask;
 public class CallableCalculator implements Callable {
 
     String strLine = new String();
-    int lineNumber = 0;
 
-    int whichLine = 0;
-    public CallableCalculator(int whichLine){
-        this.whichLine = whichLine;
+
+   static FileInputStream f;
+
+    static {
+        try {
+            f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read2\\src\\file.txt");
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public Object call() throws Exception
-    {
-        String output = "1";
-        FileInputStream f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
-        DataInputStream in = new DataInputStream(f);
-        BufferedReader r = new BufferedReader(new InputStreamReader(in));
+    static DataInputStream in = new DataInputStream(f);
+   static BufferedReader r = new BufferedReader(new InputStreamReader(in));
+    public Object call() throws Exception {
+        String allResults = new String();
+        String output = new String();
         while ((strLine = r.readLine()) != null) {
-            if(lineNumber == whichLine) {
+
                 strLine = strLine.replaceAll("=","");
                 ONP calculator = new ONP(strLine);
                 output = "";
                 output += calculator.oblicz();
-                break;
-            }
-            lineNumber++;
+                allResults += strLine+" = "+output+System.lineSeparator();
         }
         in.close();
-        if(output == "1")
-            return "ERROR no equation to solve";
-        return strLine+" = "+output;
+        return allResults;
     }
 
 }
