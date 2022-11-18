@@ -20,59 +20,6 @@ public class Main {
         for(int i = 0; i<threadsNumber; i++){
             executor.submit(taskTab[i]);
         }
-
         executor.shutdown();
-//
-//
-//        Callable[] callableTab = new CallableCalculator[threadsNumber];
-//        FutureTask[] futureTab = new FutureTask[threadsNumber];
-//        for (int i = 0; i < threadsNumber; i++) {
-//            callableTab[i] = new CallableCalculator();
-//        }
-
-//        ExecutorService executorService = Executors.newFixedThreadPool(threadsNumber);
-
-
-//        for (int i = 0; i < threadsNumber; i++) {
-//            futureTab[i] = (FutureTask) executorService.submit(callableTab[i]);
-//            System.out.println(futureTab[i].get());
-//        }
-
-        //@@@@@@@@@@@@@@@@ UWAGA NIŻEJ WIRUS
-
-//        FileWriter f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read2\\src\\file.txt");
-//        BufferedWriter out = new BufferedWriter(f);
-//        String dane = new String();
-//
-//        boolean[] tab = new boolean[threadsNumber];
-//
-//        for (int i = 0; i < threadsNumber; i++) {
-//            tab[i] = false;
-//        }
-//
-//        boolean help = true;
-//
-//        while (help) {
-//            try {
-//                for (int i = 0; i < threadsNumber; i++) {
-//                    if (futureTab[i].isDone() && tab[i] == false) {
-//                        dane = futureTab[i].get().toString();
-//                        if(dane=="ERROR no equation to solve"){
-//                            tab[i] = true;
-//                        } else {
-//                            out.write(dane + System.lineSeparator());
-//                            tab[i] = true;
-//                        }
-//                    }
-//                }
-//                help = false;
-//                for (boolean x : tab) {
-//                    if (x == false) help = true;
-//                }
-//            } catch (Exception e) {
-//                System.out.println("Jest zle");
-//            }
-//        }
-//    out.close();
+        }
       }
-    }

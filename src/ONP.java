@@ -9,15 +9,6 @@ public class ONP {
 
     private String nieLiczby="+-*/^()";
 
-    /**
-
-     Stwórz obiekt, który dokona konwersji wyrażenia na odwrotną notację polską.
-
-     * @param wyrazenie
-
-     * oznacza wyrażenie które ma zostac skonwertowane do odwrotnej notacji polskiej.
-
-     */
 
     public ONP(String wyrazenie) {
 
@@ -28,46 +19,6 @@ public class ONP {
         toONP();//wywołaj konwersję wyrażenia na oonp
 
     }
-
-    /**
-
-     * Konwersja wyrażenia na odwrotną notację polską.
-
-     * 1 - dzielimy wyrażenie infiksowe na części na podstawie separatorów
-
-     * 2 - dopóki są elementy w wyrażeniu wejściowym
-
-     * 2.1 - pobieramy element
-
-     * 2.2 - jeżeli element jest operatorem
-
-     * 2.2.1 - sprawdzemy priorytety
-
-     * 2.2.2 - odkładamy operator na stos
-
-     * 2.3 - jeżeli element jest nawiasem otwierającym
-
-     * 2.3.1 - odłóż na stos nawias otwierający
-
-     * 2.4 - jeżeli element jest nawiasem zamykającym
-
-     * 2.4.1 - ściągamy operatory ze stosu, aż do nawiasu otwierajęcego
-
-     * 2.4.2 - ściągnij ze stosu
-
-     * 2.4.3 - ściągnij już niepotrzebny nawias otwierający
-
-     * 2.5 - jeżeli element nie jest operatorem ani nawiasem dodajemy go do wyrażenia postfiksowego
-
-     * 3 - ściągamy ze stosu pozostałe operatory i dodajemy je do wyrażenia postfiksowego
-
-     * 3.1 - ściągnij i dopisz do wyrażenia onp
-
-     @param wyrazenie
-
-      * dokonuje konwersji wyrażenia na ONP.
-
-     */
 
     private void toONP()
 
@@ -141,26 +92,6 @@ public class ONP {
 
     }
 
-    /**
-
-     * Obliczenie priorytetu operatora:
-
-     * + lub - = 1
-
-     * * lub / = 2
-
-     * ^ = 3
-
-     * pozostałe = 0
-
-     * @param operator
-
-     * operator, dla którego zostanie wyznaczony priorytet.
-
-     * @return
-
-     */
-
     private boolean czyNieLiczba(char z)
 
     {
@@ -193,13 +124,6 @@ public class ONP {
 
     }
 
-    /**
-
-     * Zwróć wyrażenie w postaci Odwrotnej Notacji Polskiej
-
-     *
-
-     */
 
     public @Override String toString() //zwróć wyrażenie w postaci onp
 
@@ -208,16 +132,6 @@ public class ONP {
         return onp;
 
     }
-
-    /**
-
-     * Dokonaj obliczenia zapisanego w odwrotnej notacji polskiej i zwróć wynik.
-
-     * @return
-
-     * Zwraca wynik z zapisanego wyrażenia w postaci ONP.
-
-     */
 
     public double oblicz()
 
