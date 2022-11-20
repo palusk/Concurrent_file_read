@@ -24,6 +24,9 @@ public class CallableCalculator implements Callable {
         String allResults = new String();
         String output = new String();
         while ((strLine = r.readLine()) != null) {
+                strLine.trim();
+                int indexOfEquals = strLine.indexOf('=');
+
                 strLine = strLine.replaceAll("=","");
                 ONP calculator = new ONP(strLine);
                 output = "";
