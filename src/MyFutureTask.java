@@ -20,10 +20,9 @@ public class MyFutureTask extends FutureTask {
             FileWriter f = null;
             lock.lock();
 
-            f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read6\\src\\file.txt");
+            f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read6\\src\\file.txt", true);
             BufferedWriter out = new BufferedWriter(f);
-            out.write(dane + this.get().toString());
-            dane += this.get().toString();
+            out.append(System.lineSeparator() + this.get().toString());
             out.close();
 
             lock.unlock();
@@ -31,5 +30,4 @@ public class MyFutureTask extends FutureTask {
 
     }
 }
-    }
 

@@ -1,20 +1,6 @@
-2 * 3 - (18 - 4) / 2 + 2^3  = 15.0	pool-3-thread-2
-6 * 3 - 4 + 3^2  = 23.0	pool-3-thread-2
-10 / 2 - (20 - 4) * 7  = -107.0	pool-3-thread-2
-2 + 2  = 4.0	pool-3-thread-2
-10 - 5  = 5.0	pool-3-thread-2
-2 * 3 - (18 - 4) / 2 + 2^3  = 15.0	pool-3-thread-2
-6 * 3 - 4 + 3^2  = 23.0	pool-3-thread-2
-10 / 2 - (20 - 4) * 7  = -107.0	pool-3-thread-2
-2 + 2  = 4.0	pool-3-thread-2
-10 - 5  = 5.0	pool-3-thread-2
-2 * 3 - (18 - 4) / 2 + 2^3  = 15.0	pool-3-thread-1
-6 * 3 - 4 + 3^2  = 23.0	pool-3-thread-1
-10 / 2 - (20 - 4) * 7  = -107.0	pool-3-thread-1
-2 + 2  = 4.0	pool-3-thread-1
-10 - 5  = 5.0	pool-3-thread-1
-2 * 3 - (18 - 4) / 2 + 2^3  = 15.0	pool-3-thread-1
-6 * 3 - 4 + 3^2  = 23.0	pool-3-thread-1
-10 / 2 - (20 - 4) * 7  = -107.0	pool-3-thread-1
-2 + 2  = 4.0	pool-3-thread-1
-10 - 5  = 5.0	pool-3-thread-1
+2 + 2 =
+3 + 3 =
+4 + 4 =
+5 + 5 =
+
+2 + 2  = 4.0	pool-1-thread-1

@@ -21,9 +21,10 @@ public class CallableCalculator implements Callable {
 
     public Object call() throws Exception {
         String strLine = new String();
+        Boolean isCalculated = false;
         String allResults = new String();
         String output = new String();
-        while ((strLine = r.readLine()) != null) {{
+        while ((strLine = r.readLine()) != null && !isCalculated) {{
             strLine.trim();
             int indexOfEquals = strLine.indexOf('=');
             if(strLine.length() == indexOfEquals+1){
@@ -34,7 +35,7 @@ public class CallableCalculator implements Callable {
                 output += calculator.oblicz();
                 allResults += strLine+" = "+output+"\t"+Thread.currentThread().getName()+System.lineSeparator();
                 System.out.println(Thread.currentThread().getName() + "  -  "+ strLine);
-
+                isCalculated = true;
 
             } else strLine = r.readLine();}
         }
