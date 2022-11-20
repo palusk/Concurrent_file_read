@@ -23,13 +23,20 @@ public class CallableCalculator implements Callable {
         String strLine = new String();
         String allResults = new String();
         String output = new String();
-        while ((strLine = r.readLine()) != null) {
+        while ((strLine = r.readLine()) != null) {{
+            strLine.trim();
+            int indexOfEquals = strLine.indexOf('=');
+            if(strLine.length() == indexOfEquals+1){
+
+
                 strLine = strLine.replaceAll("=","");
                 ONP calculator = new ONP(strLine);
-                output = "";
                 output += calculator.oblicz();
                 allResults += strLine+" = "+output+"\t"+Thread.currentThread().getName()+System.lineSeparator();
-            System.out.println(Thread.currentThread().getName() + "  -  "+ strLine);
+                System.out.println(Thread.currentThread().getName() + "  -  "+ strLine);
+
+
+            } else strLine = r.readLine();}
         }
         in.close();
         return allResults;
