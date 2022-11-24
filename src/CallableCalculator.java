@@ -1,6 +1,7 @@
 import java.io.*;
 import java.sql.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -10,7 +11,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class CallableCalculator implements Callable {
 
-    static ArrayList<Integer> reservationLine = new ArrayList<Integer>();
+    static HashMap<String,Integer> reservationLine = new HashMap<String,Integer>();
 
     Lock lock2 = new ReentrantLock();
     Condition txtWritten2 = lock2.newCondition();
@@ -18,7 +19,7 @@ public class CallableCalculator implements Callable {
     FileInputStream f;
     {
         try {
-            f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+            f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -39,15 +40,12 @@ public class CallableCalculator implements Callable {
 
             lock2.lock();
             boolean found = false;
-            for (int x : reservationLine) {
-                if (x == lineNumber) {
+            for(HashMap.Entry<String, Integer> entry : reservationLine.entrySet()) {
+                if (lineNumber == entry.getValue())
                     found = true;
-                    break;
-                }
             }
                 if (strLine.length() == indexOfEquals + 1 && !found) {
-                    reservationLine.add(lineNumber);
-
+                    reservationLine.put(Thread.currentThread().getName(), lineNumber);
                     strLine = strLine.replaceAll("=", "");
                     ONP calculator = new ONP(strLine);
                     output += calculator.oblicz();

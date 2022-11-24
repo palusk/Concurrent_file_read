@@ -23,9 +23,12 @@ public class MyFutureTask extends FutureTask {
             File.set(getIndex(), File.get(getIndex())+this.get().toString());
         //    System.out.println(File.toString());
 
+for(String e:File){
+    System.out.println(e);
+}
             FileWriter f = null;
             lock.lock();
-            f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+            f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
             BufferedWriter out = new BufferedWriter(f);
             String temp = new String();
             for(String e:File){
