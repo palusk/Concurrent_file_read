@@ -9,17 +9,18 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+
 public class CallableCalculator implements Callable {
 
     static HashMap<String,Integer> reservationLine = new HashMap<String,Integer>();
 
-    Lock lock2 = new ReentrantLock();
-    Condition txtWritten2 = lock2.newCondition();
+     Lock lock2 = new ReentrantLock();
+     Condition txtWritten2 = lock2.newCondition();
 
     FileInputStream f;
     {
         try {
-            f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+            f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -54,7 +55,6 @@ public class CallableCalculator implements Callable {
 
 
                 } else lineNumber++;
-
 
             }
             lock2.unlock();

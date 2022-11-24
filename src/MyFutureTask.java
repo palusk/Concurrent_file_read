@@ -12,23 +12,33 @@ public class MyFutureTask extends FutureTask {
     public MyFutureTask(Callable callable) {
         super(callable);
     }
-    Lock lock = new ReentrantLock();
-    Condition txtWritten = lock.newCondition();
+     Lock lock = new ReentrantLock();
+     Condition txtWritten = lock.newCondition();
 
+    static ArrayList<String> File;
+    static {
+        try {
+
+            File = getFile();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     protected void done() {
         try {
-            ArrayList<String> File = getFile();
+          //  ArrayList<String> File = getFile();
             File.set(getIndex(), File.get(getIndex())+this.get().toString());
-        //    System.out.println(File.toString());
+         //   System.out.println(File.toString());
 
 for(String e:File){
     System.out.println(e);
 }
             FileWriter f = null;
             lock.lock();
-            f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+            f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
             BufferedWriter out = new BufferedWriter(f);
             String temp = new String();
             for(String e:File){
@@ -46,7 +56,7 @@ for(String e:File){
 
 
 
-    public ArrayList<String> getFile() throws Exception{
+    public static ArrayList<String> getFile() throws Exception{
         ArrayList<String> contextFile = new ArrayList<String>();
         FileInputStream fin;
         {
@@ -86,7 +96,7 @@ for(String e:File){
         while ((strLine = r.readLine()) != null && !founded) {
             strLine.trim();
             int indexOfEquals = strLine.indexOf('=');
-            if(strLine.length() == indexOfEquals+1){
+            if(strLine.length() == indexOfEquals+1 && CallableCalculator.reservationLine.get(Thread.currentThread().getName()) == foundedIndex) {
                 founded = true;
             }else foundedIndex++;
         }
