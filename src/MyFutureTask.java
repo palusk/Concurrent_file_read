@@ -1,3 +1,4 @@
+import javax.crypto.spec.PSource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
@@ -13,16 +14,18 @@ public class MyFutureTask extends FutureTask {
     }
     Lock lock = new ReentrantLock();
     Condition txtWritten = lock.newCondition();
+
+
     @Override
     protected void done() {
         try {
             ArrayList<String> File = getFile();
             File.set(getIndex(), File.get(getIndex())+this.get().toString());
+        //    System.out.println(File.toString());
 
             FileWriter f = null;
             lock.lock();
-
-            f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read6\\src\\file.txt");
+            f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
             BufferedWriter out = new BufferedWriter(f);
             String temp = new String();
             for(String e:File){
@@ -38,12 +41,14 @@ public class MyFutureTask extends FutureTask {
 
     }
 
+
+
     public ArrayList<String> getFile() throws Exception{
         ArrayList<String> contextFile = new ArrayList<String>();
         FileInputStream fin;
         {
             try {
-                fin = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read6\\src\\file.txt");
+                fin = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -63,7 +68,7 @@ public class MyFutureTask extends FutureTask {
 
         {
             try {
-                f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read6\\src\\file.txt");
+                f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }

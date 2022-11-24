@@ -1,4 +1,5 @@
 import java.io.*;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.Callable;
@@ -9,16 +10,15 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class CallableCalculator implements Callable {
 
-    static LinkedList<Integer> reservationLine = new LinkedList<Integer>();
+    static ArrayList<Integer> reservationLine = new ArrayList<Integer>();
 
-    Lock lock = new ReentrantLock();
-    Condition txtWritten = lock.newCondition();
+    Lock lock2 = new ReentrantLock();
+    Condition txtWritten2 = lock2.newCondition();
 
     FileInputStream f;
-
     {
         try {
-            f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read6\\src\\file.txt");
+            f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -32,32 +32,35 @@ public class CallableCalculator implements Callable {
         String strLine = new String();
         Boolean isCalculated = false;
         String output = new String();
+
         while ((strLine = r.readLine()) != null && !isCalculated) {
             strLine.trim();
             int indexOfEquals = strLine.indexOf('=');
 
-            lock.lock();
+            lock2.lock();
             boolean found = false;
             for (int x : reservationLine) {
                 if (x == lineNumber) {
                     found = true;
                     break;
                 }
-                if (strLine.length() == indexOfEquals + 1 && found == false) {
+            }
+                if (strLine.length() == indexOfEquals + 1 && !found) {
                     reservationLine.add(lineNumber);
-                    lock.unlock();
 
                     strLine = strLine.replaceAll("=", "");
                     ONP calculator = new ONP(strLine);
                     output += calculator.oblicz();
-                    System.out.println(Thread.currentThread().getName() + "  -  " + strLine);
+                    System.out.println(Thread.currentThread().getName() + "  -  " + strLine + " " + output);
                     isCalculated = true;
 
 
                 } else lineNumber++;
+
+
             }
+            lock2.unlock();
             in.close();
             return output;
         }
-
     }
