@@ -1,10 +1,6 @@
 import java.io.*;
-import java.sql.Array;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.concurrent.Callable;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -30,6 +26,10 @@ public class CallableCalculator implements Callable {
     BufferedReader r = new BufferedReader(new InputStreamReader(in));
 
     public Object call() throws Exception {
+        lock2.lock();
+        try {
+            System.out.println("Rozpoczeto");
+
         int lineNumber = 0;
         String strLine = new String();
         Boolean isCalculated = false;
@@ -39,12 +39,12 @@ public class CallableCalculator implements Callable {
             strLine.trim();
             int indexOfEquals = strLine.indexOf('=');
 
-            lock2.lock();
-            boolean found = false;
-            for(HashMap.Entry<String, Integer> entry : reservationLine.entrySet()) {
-                if (lineNumber == entry.getValue())
-                    found = true;
-            }
+                boolean found = false;
+                for (HashMap.Entry<String, Integer> entry : reservationLine.entrySet()) {
+                    if (lineNumber == entry.getValue())
+                        found = true;
+                }
+
                 if (strLine.length() == indexOfEquals + 1 && !found) {
                     reservationLine.put(Thread.currentThread().getName(), lineNumber);
                     strLine = strLine.replaceAll("=", "");
@@ -56,9 +56,15 @@ public class CallableCalculator implements Callable {
 
                 } else lineNumber++;
 
+
+
             }
-            lock2.unlock();
             in.close();
+
             return output;
+        }finally {
+            lock2.unlock();
+            System.out.println("zakonczono");
+        }
         }
     }

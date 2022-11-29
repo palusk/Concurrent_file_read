@@ -12,8 +12,8 @@ public class MyFutureTask extends FutureTask {
     public MyFutureTask(Callable callable) {
         super(callable);
     }
-     Lock lock = new ReentrantLock();
-     Condition txtWritten = lock.newCondition();
+     static Lock lock = new ReentrantLock();
+     //Condition txtWritten = lock.newCondition();
 
     static ArrayList<String> File;
     static {
@@ -27,31 +27,38 @@ public class MyFutureTask extends FutureTask {
     }
 
     @Override
-    protected void done() {
+    protected synchronized void done() {
+        lock.lock();
         try {
-          //  ArrayList<String> File = getFile();
+        try {
             File.set(getIndex(), File.get(getIndex())+this.get().toString());
-         //   System.out.println(File.toString());
 
-for(String e:File){
-    System.out.println(e);
-}
+
+//for(String e:File){
+//    System.out.println(e);
+//}
+
             FileWriter f = null;
-            lock.lock();
-            f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
-            BufferedWriter out = new BufferedWriter(f);
-            String temp = new String();
-            for(String e:File){
 
-                temp += e+System.lineSeparator();
-            }
-            out.write(temp);
+                f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+                BufferedWriter out = new BufferedWriter(f);
+                String temp = new String();
+                for (String e : File) {
 
-            out.close();
+                    temp += e + System.lineSeparator();
+                }
+                out.write(temp);
 
-            lock.unlock();
+                out.close();
+
+
+
         }catch(Exception e){}
 
+    }finally {
+        if (((ReentrantLock)lock).isHeldByCurrentThread())
+            lock.unlock();
+    }
     }
 
 
