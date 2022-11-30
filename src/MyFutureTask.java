@@ -40,7 +40,7 @@ public class MyFutureTask extends FutureTask {
 
             FileWriter f = null;
 
-                f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+                f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
                 BufferedWriter out = new BufferedWriter(f);
                 String temp = new String();
                 for (String e : File) {
@@ -68,7 +68,7 @@ public class MyFutureTask extends FutureTask {
         FileInputStream fin;
         {
             try {
-                fin = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+                fin = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -88,7 +88,7 @@ public class MyFutureTask extends FutureTask {
 
         {
             try {
-                f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+                f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }

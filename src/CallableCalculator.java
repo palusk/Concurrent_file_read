@@ -10,61 +10,80 @@ public class CallableCalculator implements Callable {
 
     static HashMap<String,Integer> reservationLine = new HashMap<String,Integer>();
 
-     Lock lock2 = new ReentrantLock();
-     Condition txtWritten2 = lock2.newCondition();
+    static Lock lock2 = new ReentrantLock();
+    Condition txtWritten2 = lock2.newCondition();
 
-    FileInputStream f;
-    {
-        try {
-            f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+    InputStream f = getInputStream();
     DataInputStream in = new DataInputStream(f);
     BufferedReader r = new BufferedReader(new InputStreamReader(in));
 
+
     public Object call() throws Exception {
-        lock2.lock();
-        try {
-            System.out.println("Rozpoczeto");
 
         int lineNumber = 0;
+
         String strLine = new String();
-        Boolean isCalculated = false;
         String output = new String();
 
-        while ((strLine = r.readLine()) != null && !isCalculated) {
-            strLine.trim();
-            int indexOfEquals = strLine.indexOf('=');
+        boolean isCalculated = false;
+        boolean notReserved;
+        boolean notSolved;
 
-                boolean found = false;
-                for (HashMap.Entry<String, Integer> entry : reservationLine.entrySet()) {
-                    if (lineNumber == entry.getValue())
-                        found = true;
+            while ((strLine = r.readLine()) != null && !isCalculated) {
+
+                notSolved = isNotSolved(strLine);
+                lock2.lock();
+                notReserved = isNotReserved(lineNumber);
+                if (notReserved && notSolved) {
+                    reserveLine(lineNumber);
                 }
+                lock2.unlock();
+                if (notReserved && notSolved) {
+                    output += new ONP(strLine).oblicz();
+                    printResult(strLine, output);
 
-                if (strLine.length() == indexOfEquals + 1 && !found) {
-                    reservationLine.put(Thread.currentThread().getName(), lineNumber);
-                    strLine = strLine.replaceAll("=", "");
-                    ONP calculator = new ONP(strLine);
-                    output += calculator.oblicz();
-                    System.out.println(Thread.currentThread().getName() + "  -  " + strLine + " " + output);
                     isCalculated = true;
-
-
-                } else lineNumber++;
-
-
+                }else lineNumber++;
 
             }
             in.close();
-
             return output;
-        }finally {
-            lock2.unlock();
-            System.out.println("zakonczono");
         }
+
+    public FileInputStream getInputStream(){
+        FileInputStream f;
+        {
+            try {
+                f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
         }
+        return f;
     }
+
+    public boolean isNotReserved(int lineNumber){
+        for(HashMap.Entry<String, Integer> entry : reservationLine.entrySet()) {
+            if (lineNumber == entry.getValue())
+                return false;
+        }
+        return true;
+    }
+
+    public boolean isNotSolved(String strLine){
+        strLine.trim();
+        int indexOfEquals = strLine.indexOf('=');
+        if(strLine.length() == indexOfEquals + 1)
+            return true;
+        else return false;
+    }
+
+    public void reserveLine(int lineNumber){
+        reservationLine.put(Thread.currentThread().getName(), lineNumber);
+    }
+
+    public void printResult(String strLine, String output){
+        System.out.println(Thread.currentThread().getName() + "  -  " + strLine + " " + output);
+    }
+
+}
