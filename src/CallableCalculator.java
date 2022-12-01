@@ -10,8 +10,8 @@ public class CallableCalculator implements Callable {
 
     static HashMap<String,Integer> reservationLine = new HashMap<String,Integer>();
 
-    static Lock lock2 = new ReentrantLock();
-    Condition txtWritten2 = lock2.newCondition();
+    static Lock lock = new ReentrantLock();
+    //Condition txtWritten2 = lock2.newCondition();
 
     InputStream f = getInputStream();
     DataInputStream in = new DataInputStream(f);
@@ -32,12 +32,12 @@ public class CallableCalculator implements Callable {
             while ((strLine = r.readLine()) != null && !isCalculated) {
 
                 notSolved = isNotSolved(strLine);
-                lock2.lock();
+                lock.lock();
                 notReserved = isNotReserved(lineNumber);
                 if (notReserved && notSolved) {
                     reserveLine(lineNumber);
                 }
-                lock2.unlock();
+                lock.unlock();
                 if (notReserved && notSolved) {
                     output += new ONP(strLine).oblicz();
                     printResult(strLine, output);
