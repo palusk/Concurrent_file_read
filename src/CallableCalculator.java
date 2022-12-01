@@ -10,13 +10,19 @@ public class CallableCalculator implements Callable {
 
     static HashMap<String,Integer> reservationLine = new HashMap<String,Integer>();
 
-    static Lock lock = new ReentrantLock();
-    //Condition txtWritten2 = lock2.newCondition();
+    Condition condition1;
+    Condition condition2;
+    Lock lock;
 
     InputStream f = getInputStream();
     DataInputStream in = new DataInputStream(f);
     BufferedReader r = new BufferedReader(new InputStreamReader(in));
 
+    CallableCalculator(Condition condition1, Condition condition2, Lock lock){
+        this.condition1 = condition1;
+        this.condition2 = condition2;
+        this.lock = lock;
+    }
 
     public Object call() throws Exception {
 
@@ -29,25 +35,39 @@ public class CallableCalculator implements Callable {
         boolean notReserved;
         boolean notSolved;
 
+        lock.lock();
+        try {
             while ((strLine = r.readLine()) != null && !isCalculated) {
-
+                condition1.await();
                 notSolved = isNotSolved(strLine);
-                lock.lock();
+
+
                 notReserved = isNotReserved(lineNumber);
                 if (notReserved && notSolved) {
                     reserveLine(lineNumber);
                 }
-                lock.unlock();
+
+
+
                 if (notReserved && notSolved) {
-                    output += new ONP(strLine).oblicz();
+
+                    strLine = strLine.replaceAll("=", "");
+                    ONP calculator = new ONP(strLine);
+                    output += calculator.oblicz();
                     printResult(strLine, output);
 
                     isCalculated = true;
-                }else lineNumber++;
-
+                } else lineNumber++;
             }
             in.close();
+            condition2.signal();
+        }finally {
+            if(((ReentrantLock)lock).isHeldByCurrentThread())
+            lock.unlock();
+        }
+
             return output;
+
         }
 
     public FileInputStream getInputStream(){

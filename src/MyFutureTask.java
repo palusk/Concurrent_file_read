@@ -8,30 +8,41 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MyFutureTask extends FutureTask {
-    public MyFutureTask(Callable callable) {
+
+    Condition condition1;
+    Condition condition2;
+    Lock lock;
+
+    public MyFutureTask(Callable callable, Condition condition1, Condition condition2, Lock lock) {
         super(callable);
+        this.condition1 = condition1;
+        this.condition2 = condition2;
+        this.lock = lock;
     }
-    static Lock lock = new ReentrantLock();
 
     static ArrayList<String> File;
     static {try {   File = getFile(); } catch (Exception e) { throw new RuntimeException(e); }}
 
     @Override
-    protected void done() {
+    protected synchronized void done() {
+        lock.lock();
         try {
-
-            FileWriter f = null;
-            f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
-            BufferedWriter out = new BufferedWriter(f);
-            String temp = new String();
-
-            lock.lock();
+            try {
+                condition2.await();
+                FileWriter f = null;
+                f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+                BufferedWriter out = new BufferedWriter(f);
+                String temp = new String();
+                lock.lock();
                 writeToFile(out, temp);
+                lock.unlock();
+            } catch (Exception e) {
+            }
+            condition1.signal();
+        }finally {
+            if(((ReentrantLock)lock).isHeldByCurrentThread())
             lock.unlock();
-
-
-        }catch(Exception e){}
-
+        }
     }
 
 
