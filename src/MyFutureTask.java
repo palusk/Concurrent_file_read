@@ -21,13 +21,13 @@ public class MyFutureTask extends FutureTask {
         try {
 
             FileWriter f = null;
-            f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+            f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
             BufferedWriter out = new BufferedWriter(f);
             String temp = new String();
-
             lock.lock();
+
                 writeToFile(out, temp);
-            lock.unlock();
+             lock.unlock();
 
 
         }catch(Exception e){}
@@ -40,7 +40,7 @@ public class MyFutureTask extends FutureTask {
         FileInputStream fin;
         {
             try {
-                fin = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+                fin = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -59,7 +59,7 @@ public class MyFutureTask extends FutureTask {
 
         {
             try {
-                f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+                f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }

@@ -11,7 +11,7 @@ public class CallableCalculator implements Callable {
     static HashMap<String,Integer> reservationLine = new HashMap<String,Integer>();
 
     static Lock lock = new ReentrantLock();
-    //Condition txtWritten2 = lock2.newCondition();
+    Condition txtWritten2 = lock.newCondition();
 
     InputStream f = getInputStream();
     DataInputStream in = new DataInputStream(f);
@@ -33,13 +33,17 @@ public class CallableCalculator implements Callable {
 
                 notSolved = isNotSolved(strLine);
                 lock.lock();
+                System.out.println("rozpoczeto");
                 notReserved = isNotReserved(lineNumber);
                 if (notReserved && notSolved) {
                     reserveLine(lineNumber);
                 }
+                System.out.println("zakonczono");
                 lock.unlock();
                 if (notReserved && notSolved) {
-                    output += new ONP(strLine).oblicz();
+                    strLine = strLine.replaceAll("=", "");
+                    ONP calculator = new ONP(strLine);
+                    output += calculator.oblicz();
                     printResult(strLine, output);
 
                     isCalculated = true;
@@ -54,7 +58,7 @@ public class CallableCalculator implements Callable {
         FileInputStream f;
         {
             try {
-                f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+                f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
