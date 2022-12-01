@@ -8,59 +8,31 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MyFutureTask extends FutureTask {
-    static boolean clearFile = false;
     public MyFutureTask(Callable callable) {
         super(callable);
     }
-     static Lock lock = new ReentrantLock();
-     //Condition txtWritten = lock.newCondition();
+    static Lock lock = new ReentrantLock();
 
     static ArrayList<String> File;
-    static {
-        try {
-
-            File = getFile();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    static {try {   File = getFile(); } catch (Exception e) { throw new RuntimeException(e); }}
 
     @Override
-    protected synchronized void done() {
-        lock.lock();
+    protected void done() {
         try {
-        try {
-            File.set(getIndex(), File.get(getIndex())+this.get().toString());
-
-
-//for(String e:File){
-//    System.out.println(e);
-//}
 
             FileWriter f = null;
+            f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+            BufferedWriter out = new BufferedWriter(f);
+            String temp = new String();
 
-                f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
-                BufferedWriter out = new BufferedWriter(f);
-                String temp = new String();
-                for (String e : File) {
-
-                    temp += e + System.lineSeparator();
-                }
-                out.write(temp);
-
-                out.close();
-
+            lock.lock();
+                writeToFile(out, temp);
+            lock.unlock();
 
 
         }catch(Exception e){}
 
-    }finally {
-        if (((ReentrantLock)lock).isHeldByCurrentThread())
-            lock.unlock();
     }
-    }
-
 
 
     public static ArrayList<String> getFile() throws Exception{
@@ -81,7 +53,6 @@ public class MyFutureTask extends FutureTask {
         }
         return contextFile;
     }
-
     public int getIndex() throws Exception {
 
         FileInputStream f;
@@ -109,6 +80,20 @@ public class MyFutureTask extends FutureTask {
         }
         in.close();
         return foundedIndex;
+    }
+    public void writeToFile(BufferedWriter out, String temp) throws Exception{
+        try {
+            File.set(getIndex(), File.get(getIndex()) + this.get().toString());
+
+            for (String e : File) {
+                temp += e + System.lineSeparator();
+            }
+            out.write(temp);
+            out.close();
+
+        }catch (Exception e){
+            System.out.println(e);
+        }
     }
 
 }
