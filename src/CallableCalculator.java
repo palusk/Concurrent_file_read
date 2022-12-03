@@ -33,13 +33,18 @@ public class CallableCalculator implements Callable {
 
                 notSolved = isNotSolved(strLine);
                 lock.lock();
+                try{
                 System.out.println("rozpoczeto");
                 notReserved = isNotReserved(lineNumber);
                 if (notReserved && notSolved) {
                     reserveLine(lineNumber);
                 }
                 System.out.println("zakonczono");
+            }finally {
+            if (((ReentrantLock)lock).isHeldByCurrentThread())
                 lock.unlock();
+        }
+
                 if (notReserved && notSolved) {
                     strLine = strLine.replaceAll("=", "");
                     ONP calculator = new ONP(strLine);

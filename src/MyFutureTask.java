@@ -24,10 +24,17 @@ public class MyFutureTask extends FutureTask {
             f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
             BufferedWriter out = new BufferedWriter(f);
             String temp = new String();
+
+            // miejsce locka - wyzej czy zostawic tutaj
             lock.lock();
+            try {
+
 
                 writeToFile(out, temp);
-             lock.unlock();
+            }finally {
+                    if (((ReentrantLock)lock).isHeldByCurrentThread())
+                        lock.unlock();
+                }
 
 
         }catch(Exception e){}
@@ -82,12 +89,13 @@ public class MyFutureTask extends FutureTask {
         return foundedIndex;
     }
     public void writeToFile(BufferedWriter out, String temp) throws Exception{
+        // zakres indexow - mozliwy problem z znikaniem lini
         try {
             File.set(getIndex(), File.get(getIndex()) + this.get().toString());
-
             for (String e : File) {
                 temp += e + System.lineSeparator();
             }
+            //zamkniecie pliku w done?
             out.write(temp);
             out.close();
 
