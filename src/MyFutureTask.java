@@ -1,9 +1,7 @@
-import javax.crypto.spec.PSource;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -26,7 +24,6 @@ public class MyFutureTask extends FutureTask {
             BufferedWriter out = new BufferedWriter(f);
             String temp = new String();
 
-            // miejsce locka - wyzej czy zostawic tutaj
             lock.lock();
             try {
 
@@ -69,21 +66,14 @@ public class MyFutureTask extends FutureTask {
 
     public void writeToFile(BufferedWriter out, String temp) throws Exception{
 
-        // zakres indexow - mozliwy problem z znikaniem lini
-
         try{
-
             File.set(getIndex(), File.get(getIndex()) + this.get().toString());
 
             for (String e : File) {
                 temp += e + System.lineSeparator();
             }
-            //zamkniecie pliku w done?
             out.write(temp);
-
         }catch (Exception e){
-
         }
     }
-
 }
