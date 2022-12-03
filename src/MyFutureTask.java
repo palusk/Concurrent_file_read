@@ -8,67 +8,48 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MyFutureTask extends FutureTask {
-    static boolean clearFile = false;
+    static String STREAM = "C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt";
     public MyFutureTask(Callable callable) {
         super(callable);
     }
-     static Lock lock = new ReentrantLock();
-     //Condition txtWritten = lock.newCondition();
+    static Lock lock = new ReentrantLock();
 
     static ArrayList<String> File;
-    static {
-        try {
-
-            File = getFile();
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    static {try {   File = getFile(); } catch (Exception e) { throw new RuntimeException(e); }}
 
     @Override
-    protected synchronized void done() {
-        lock.lock();
+    protected  void done() {
         try {
-        try {
-            File.set(getIndex(), File.get(getIndex())+this.get().toString());
-
-
-//for(String e:File){
-//    System.out.println(e);
-//}
 
             FileWriter f = null;
+            f = new FileWriter(STREAM);
+            BufferedWriter out = new BufferedWriter(f);
+            String temp = new String();
 
-                f = new FileWriter("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
-                BufferedWriter out = new BufferedWriter(f);
-                String temp = new String();
-                for (String e : File) {
+            // miejsce locka - wyzej czy zostawic tutaj
+            lock.lock();
+            try {
 
-                    temp += e + System.lineSeparator();
-                }
-                out.write(temp);
 
+                writeToFile(out, temp);
                 out.close();
-
+            }finally {
+                out.close();
+                    if (((ReentrantLock)lock).isHeldByCurrentThread())
+                        lock.unlock();
+                }
 
 
         }catch(Exception e){}
 
-    }finally {
-        if (((ReentrantLock)lock).isHeldByCurrentThread())
-            lock.unlock();
     }
-    }
-
-
 
     public static ArrayList<String> getFile() throws Exception{
         ArrayList<String> contextFile = new ArrayList<String>();
         FileInputStream fin;
         {
             try {
-                fin = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+                fin = new FileInputStream(STREAM);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -82,34 +63,27 @@ public class MyFutureTask extends FutureTask {
         return contextFile;
     }
 
-    public int getIndex() throws Exception {
+    public int getIndex() {
+  return CallableCalculator.reservationLine.get(Thread.currentThread().getName());
+    }
 
-        FileInputStream f;
+    public void writeToFile(BufferedWriter out, String temp) throws Exception{
 
-        {
-            try {
-                f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+        // zakres indexow - mozliwy problem z znikaniem lini
+
+        try{
+
+            File.set(getIndex(), File.get(getIndex()) + this.get().toString());
+
+            for (String e : File) {
+                temp += e + System.lineSeparator();
             }
-        }
+            //zamkniecie pliku w done?
+            out.write(temp);
 
-        DataInputStream in = new DataInputStream(f);
-        BufferedReader r = new BufferedReader(new InputStreamReader(in));
+        }catch (Exception e){
 
-        String strLine = new String();
-        Boolean founded = false;
-        int foundedIndex = 0;
-        while ((strLine = r.readLine()) != null && !founded) {
-            strLine.trim();
-            int indexOfEquals = strLine.indexOf('=');
-            if(strLine.length() == indexOfEquals+1 && CallableCalculator.reservationLine.get(Thread.currentThread().getName()) == foundedIndex) {
-                founded = true;
-            }else foundedIndex++;
         }
-        in.close();
-        return foundedIndex;
     }
 
 }
-

@@ -9,14 +9,13 @@ import java.util.concurrent.locks.ReentrantLock;
 public class CallableCalculator implements Callable {
 
     static HashMap<String,Integer> reservationLine = new HashMap<String,Integer>();
-
-    static Lock lock2 = new ReentrantLock();
-    Condition txtWritten2 = lock2.newCondition();
+    static String STREAM = "C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt";
+    static Lock lock = new ReentrantLock();
+    Condition txtWritten2 = lock.newCondition();
 
     InputStream f = getInputStream();
     DataInputStream in = new DataInputStream(f);
     BufferedReader r = new BufferedReader(new InputStreamReader(in));
-
 
     public Object call() throws Exception {
 
@@ -32,14 +31,21 @@ public class CallableCalculator implements Callable {
             while ((strLine = r.readLine()) != null && !isCalculated) {
 
                 notSolved = isNotSolved(strLine);
-                lock2.lock();
+                lock.lock();
+                try{
                 notReserved = isNotReserved(lineNumber);
                 if (notReserved && notSolved) {
                     reserveLine(lineNumber);
                 }
-                lock2.unlock();
+            }finally {
+            if (((ReentrantLock)lock).isHeldByCurrentThread())
+                lock.unlock();
+        }
+
                 if (notReserved && notSolved) {
-                    output += new ONP(strLine).oblicz();
+                    strLine = strLine.replaceAll("=", "");
+                    ONP calculator = new ONP(strLine);
+                    output += calculator.oblicz();
                     printResult(strLine, output);
 
                     isCalculated = true;
@@ -54,7 +60,7 @@ public class CallableCalculator implements Callable {
         FileInputStream f;
         {
             try {
-                f = new FileInputStream("C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt");
+                f = new FileInputStream(STREAM);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
