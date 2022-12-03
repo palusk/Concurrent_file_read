@@ -9,14 +9,13 @@ import java.util.concurrent.locks.ReentrantLock;
 public class CallableCalculator implements Callable {
 
     static HashMap<String,Integer> reservationLine = new HashMap<String,Integer>();
-
+    static String STREAM = "C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt";
     static Lock lock = new ReentrantLock();
     Condition txtWritten2 = lock.newCondition();
 
     InputStream f = getInputStream();
     DataInputStream in = new DataInputStream(f);
     BufferedReader r = new BufferedReader(new InputStreamReader(in));
-
 
     public Object call() throws Exception {
 
@@ -34,12 +33,10 @@ public class CallableCalculator implements Callable {
                 notSolved = isNotSolved(strLine);
                 lock.lock();
                 try{
-                System.out.println("rozpoczeto");
                 notReserved = isNotReserved(lineNumber);
                 if (notReserved && notSolved) {
                     reserveLine(lineNumber);
                 }
-                System.out.println("zakonczono");
             }finally {
             if (((ReentrantLock)lock).isHeldByCurrentThread())
                 lock.unlock();
@@ -63,7 +60,7 @@ public class CallableCalculator implements Callable {
         FileInputStream f;
         {
             try {
-                f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+                f = new FileInputStream(STREAM);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }

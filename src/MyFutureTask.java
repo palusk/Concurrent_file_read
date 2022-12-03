@@ -8,6 +8,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class MyFutureTask extends FutureTask {
+    static String STREAM = "C:\\Users\\mateu\\IdeaProjects\\Concurrent_file_read1\\src\\file.txt";
     public MyFutureTask(Callable callable) {
         super(callable);
     }
@@ -17,11 +18,11 @@ public class MyFutureTask extends FutureTask {
     static {try {   File = getFile(); } catch (Exception e) { throw new RuntimeException(e); }}
 
     @Override
-    protected void done() {
+    protected  void done() {
         try {
 
             FileWriter f = null;
-            f = new FileWriter("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+            f = new FileWriter(STREAM);
             BufferedWriter out = new BufferedWriter(f);
             String temp = new String();
 
@@ -31,7 +32,9 @@ public class MyFutureTask extends FutureTask {
 
 
                 writeToFile(out, temp);
+                out.close();
             }finally {
+                out.close();
                     if (((ReentrantLock)lock).isHeldByCurrentThread())
                         lock.unlock();
                 }
@@ -41,13 +44,12 @@ public class MyFutureTask extends FutureTask {
 
     }
 
-
     public static ArrayList<String> getFile() throws Exception{
         ArrayList<String> contextFile = new ArrayList<String>();
         FileInputStream fin;
         {
             try {
-                fin = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
+                fin = new FileInputStream(STREAM);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -60,49 +62,28 @@ public class MyFutureTask extends FutureTask {
         }
         return contextFile;
     }
-    public int getIndex() throws Exception {
 
-        FileInputStream f;
-
-        {
-            try {
-                f = new FileInputStream("D:\\Program Files\\IdeaProjects\\Concurrent_file_read\\src\\file.txt");
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        DataInputStream in = new DataInputStream(f);
-        BufferedReader r = new BufferedReader(new InputStreamReader(in));
-
-        String strLine = new String();
-        Boolean founded = false;
-        int foundedIndex = 0;
-        while ((strLine = r.readLine()) != null && !founded) {
-            strLine.trim();
-            int indexOfEquals = strLine.indexOf('=');
-            if(strLine.length() == indexOfEquals+1 && CallableCalculator.reservationLine.get(Thread.currentThread().getName()) == foundedIndex) {
-                founded = true;
-            }else foundedIndex++;
-        }
-        in.close();
-        return foundedIndex;
+    public int getIndex() {
+  return CallableCalculator.reservationLine.get(Thread.currentThread().getName());
     }
+
     public void writeToFile(BufferedWriter out, String temp) throws Exception{
+
         // zakres indexow - mozliwy problem z znikaniem lini
-        try {
+
+        try{
+
             File.set(getIndex(), File.get(getIndex()) + this.get().toString());
+
             for (String e : File) {
                 temp += e + System.lineSeparator();
             }
             //zamkniecie pliku w done?
             out.write(temp);
-            out.close();
 
         }catch (Exception e){
-            System.out.println(e);
+
         }
     }
 
 }
-
